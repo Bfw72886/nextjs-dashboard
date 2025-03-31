@@ -1,26 +1,35 @@
-// import postgres from 'postgres';
+import postgres from 'postgres';
+import pg from 'pg';
+const { Client } = pg
+const client = new Client()
 
-// const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
-
-// async function listInvoices() {
-// 	const data = await sql`
-//     SELECT invoices.amount, customers.name
-//     FROM invoices
-//     JOIN customers ON invoices.customer_id = customers.id
-//     WHERE invoices.amount = 666;
-//   `;
-
-// 	return data;
-// }
+async function listInvoices() {
+  const data = await client.query(`
+    SELECT invoices.amount, customers.name
+    FROM invoices
+    JOIN customers ON invoices.customer_id = customers.id
+    WHERE invoices.amount = 666;
+  `);
+  // const data = await client.query(`
+  //   DROP TABLE invoices;
+  // `);
+  return data;
+}
 
 export async function GET() {
-  return Response.json({
-    message:
-      'Uncomment this file and remove this line. You can delete this file when you are finished.',
-  });
-  // try {
-  // 	return Response.json(await listInvoices());
-  // } catch (error) {
-  // 	return Response.json({ error }, { status: 500 });
-  // }
+  try {
+    await client.connect()
+
+    await client.query(`BEGIN`);
+    const invoices = await listInvoices();
+    await client.query(`COMMIT`);
+    await client.end()
+
+    return Response.json(invoices);
+  } catch (error) {
+    await client.query(`ROLLBACK`);
+    await client.end()
+
+    return Response.json({ error }, { status: 500 });
+  }
 }
