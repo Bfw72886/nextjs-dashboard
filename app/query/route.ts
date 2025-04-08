@@ -1,7 +1,7 @@
 import postgres from 'postgres';
 import pg from 'pg';
-const { Client } = pg
-const client = new Client()
+const { Client } = pg;
+const client = new Client();
 
 async function listInvoices() {
   const data = await client.query(`
@@ -18,17 +18,17 @@ async function listInvoices() {
 
 export async function GET() {
   try {
-    await client.connect()
+    await client.connect();
 
     await client.query(`BEGIN`);
     const invoices = await listInvoices();
     await client.query(`COMMIT`);
-    await client.end()
+    await client.end();
 
     return Response.json(invoices);
   } catch (error) {
     await client.query(`ROLLBACK`);
-    await client.end()
+    await client.end();
 
     return Response.json({ error }, { status: 500 });
   }
