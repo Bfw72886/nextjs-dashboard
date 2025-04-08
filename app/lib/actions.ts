@@ -1,6 +1,9 @@
 'use server';
 
 import { z } from 'zod';
+import pg from 'pg';
+const { Client } = pg;
+const client = new Client();
 
 const FormSchema = z.object({
     id: z.string(),
@@ -21,4 +24,9 @@ export async function createInvoice(formData: FormData) {
 
     const amountInCents = amount * 100;
     const date = new Date().toISOString().split('T')[0];
+
+    await client.query(`
+        INSERT INTO invoices (customer_id, amount, status, date)
+        VALUES (${customerId}, ${amountInCents}, ${status}, ${date});
+    `);
 }
