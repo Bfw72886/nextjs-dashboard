@@ -2,6 +2,7 @@
 
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 import pg from 'pg';
 const { Client } = pg;
 const client = new Client();
@@ -32,4 +33,5 @@ export async function createInvoice(formData: FormData) {
     `);
 
     revalidatePath('/dashboard/invoices');
+    redirect('/dashboard/invoices');
 }
