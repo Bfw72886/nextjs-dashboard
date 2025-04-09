@@ -48,9 +48,13 @@ export async function updateInvoice(id: String, formData: FormData) {
 
   const amountInCents = amount * 100;
 
-  /*
-  TODO DATABASE LOGIC
-  */
+  await client.connect();
+  await client.query(`
+    UPDATE invoices
+    SET customer_id = '${customerId}', amount = ${amountInCents}, status = '${status}'
+    WHERE id = '${id}'
+    `);
+  await client.end();
 
   revalidatePath('/dashboard/invoices');
   redirect('/dashboard/invoices');
