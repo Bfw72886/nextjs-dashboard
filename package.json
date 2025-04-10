@@ -3,7 +3,8 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev -H 127.0.0.1 -p 3001 --turbopack",
-    "start": "next start"
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
@@ -28,6 +29,8 @@
     "@types/node": "22.10.7",
     "@types/pg": "^8.11.11",
     "@types/react": "19.0.7",
-    "@types/react-dom": "19.0.3"
+    "@types/react-dom": "19.0.3",
+    "eslint": "^9",
+    "eslint-config-next": "15.3.0"
   }
 }
